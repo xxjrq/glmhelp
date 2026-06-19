@@ -2,7 +2,12 @@
 
 一个用于监听 `bigmodel.cn` GLM Coding 套餐补货状态的 Chrome 扩展。扩展可以在目标套餐按钮变为可购买时提醒用户，并按配置触发点击流程。
 
-> 核心定位：可配合 **EasyBR 指纹浏览器** 使用，实现多浏览器实例、多账号环境隔离、多窗口同时监控 GLM Coding 套餐补货状态，适合需要同时盯多个套餐、多个账号或多个浏览器环境的场景。
+> 核心定位：可配合 **EasyBR / eBrower 指纹浏览器** 使用，实现多浏览器实例、多账号环境隔离、多窗口同时监控 GLM Coding 套餐补货状态，适合需要同时盯多个套餐、多个账号或多个浏览器环境的场景。
+>
+> EasyBR / eBrower 相关链接：
+>
+> - 官网：[https://www.ebrower.com/](https://www.ebrower.com/)
+> - API 文档：[https://www.ebrower.com/helperdoc/apidoc.html](https://www.ebrower.com/helperdoc/apidoc.html)
 
 > 适用场景：GLM Coding 套餐经常短时间补货、售罄，用户希望减少手动刷新和错过补货窗口的情况。
 
@@ -19,9 +24,14 @@
 - 支持 Chrome 桌面通知和声音提示
 - Popup 弹窗展示当前状态、目标套餐、配置项和实时日志
 
-## 配合 EasyBR 指纹浏览器多开
+## 配合 EasyBR / eBrower 指纹浏览器多开
 
-本扩展可以作为 EasyBR 指纹浏览器里的 Chrome 扩展使用。每个 EasyBR 浏览器环境拥有独立指纹、独立 Cookie、独立登录态和独立扩展配置，因此可以实现：
+本扩展可以作为 EasyBR / eBrower 指纹浏览器里的 Chrome 扩展使用。
+
+- 官网：[https://www.ebrower.com/](https://www.ebrower.com/)
+- API 文档：[https://www.ebrower.com/helperdoc/apidoc.html](https://www.ebrower.com/helperdoc/apidoc.html)
+
+每个 EasyBR 浏览器环境拥有独立指纹、独立 Cookie、独立登录态和独立扩展配置，因此可以实现：
 
 - 一个浏览器环境监控 Max 套餐
 - 一个浏览器环境监控 Pro 套餐
