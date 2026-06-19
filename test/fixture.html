@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><title>GLM Coding Plan</title></head>
+<body>
+<div id="app">
+  <!-- 套餐卡片列表 -->
+  <div class="glm-coding-package-list">
+    <!-- Lite: 售罄 -->
+    <div>
+      <div>
+        <div class="package-card-btn-box">
+          <button class="el-button" disabled>暂时售罄 · 06月19日 10:00</button>
+        </div>
+        <div class="package-card-title">GLM Coding Lite</div>
+        <div class="package-card-price">¥49/月</div>
+      </div>
+    </div>
+    <!-- Pro: 可购买 -->
+    <div>
+      <div>
+        <div class="package-card-btn-box">
+          <button class="el-button">特惠订阅</button>
+        </div>
+        <div class="package-card-title">GLM Coding Pro</div>
+        <div class="package-card-price">¥149/月</div>
+      </div>
+    </div>
+    <!-- Max: 售罄 + 补货时间 -->
+    <div>
+      <div>
+        <div class="package-card-btn-box">
+          <button class="el-button is-disabled">暂时售罄 · 06月20日 10:00</button>
+        </div>
+        <div class="package-card-title">GLM Coding Max</div>
+        <div class="package-card-price">¥469/月</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 限流弹窗 -->
+  <div class="el-dialog__wrapper" style="display:none">
+    <div class="el-dialog">
+      <div class="el-dialog__header"><button class="el-dialog__close">×</button></div>
+      <div class="el-dialog__body">当前购买人数较多，请稍后再试</div>
+    </div>
+  </div>
+
+  <!-- 支付弹窗 -->
+  <div class="pay-dialog" style="display:none">
+    <div class="pay-dialog-body">支付二维码</div>
+  </div>
+</div>
+</body>
+</html>

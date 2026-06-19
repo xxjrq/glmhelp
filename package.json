@@ -1,0 +1,25 @@
+{
+  "name": "glm-snipe-extension",
+  "version": "1.0.0",
+  "description": "GLM Coding 套餐补货监听与提醒 Chrome 扩展",
+  "private": false,
+  "type": "commonjs",
+  "scripts": {
+    "build": "node build.js",
+    "test": "node test/test.js",
+    "start": "./start.sh",
+    "stop": "./stop.sh"
+  },
+  "keywords": [
+    "chrome-extension",
+    "manifest-v3",
+    "bigmodel",
+    "glm",
+    "monitoring",
+    "notification"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "jsdom": "^29.1.1"
+  }
+}

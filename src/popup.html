@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GLM 套餐抢购助手</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 头部 -->
+    <header class="header">
+      <div class="header-title">
+        <span class="logo-icon">⚡</span>
+        <span>GLM 抢购助手</span>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="toggleEnabled">
+        <span class="toggle-slider"></span>
+      </label>
+    </header>
+
+    <!-- 状态条 -->
+    <div class="status-bar" id="statusBar">
+      <span class="status-dot" id="statusDot"></span>
+      <span id="statusText">就绪</span>
+      <span class="status-time" id="statusTime"></span>
+    </div>
+
+    <!-- 套餐选择 -->
+    <section class="section">
+      <div class="section-label">目标套餐</div>
+      <div class="plan-grid" id="planGrid">
+        <label class="plan-card" data-plan="lite">
+          <input type="checkbox" class="plan-checkbox" data-plan="lite">
+          <div class="plan-name">Lite</div>
+          <div class="plan-price">¥49/月</div>
+          <div class="plan-status" id="planStatus-lite">-</div>
+        </label>
+        <label class="plan-card" data-plan="pro">
+          <input type="checkbox" class="plan-checkbox" data-plan="pro">
+          <div class="plan-name">Pro</div>
+          <div class="plan-price">¥149/月</div>
+          <div class="plan-status" id="planStatus-pro">-</div>
+        </label>
+        <label class="plan-card active" data-plan="max">
+          <input type="checkbox" class="plan-checkbox" data-plan="max" checked>
+          <div class="plan-name">Max</div>
+          <div class="plan-price">¥469/月</div>
+          <div class="plan-status" id="planStatus-max">-</div>
+        </label>
+      </div>
+    </section>
+
+    <!-- 配置 -->
+    <section class="section">
+      <div class="section-label">行为设置</div>
+      <div class="config-row">
+        <span>自动点击购买</span>
+        <label class="toggle-sm"><input type="checkbox" id="autoClick" checked><span class="toggle-sm-slider"></span></label>
+      </div>
+      <div class="config-row">
+        <span>通知提醒</span>
+        <label class="toggle-sm"><input type="checkbox" id="notify" checked><span class="toggle-sm-slider"></span></label>
+      </div>
+      <div class="config-row">
+        <span>声音提示</span>
+        <label class="toggle-sm"><input type="checkbox" id="sound" checked><span class="toggle-sm-slider"></span></label>
+      </div>
+      <div class="config-row">
+        <span>补货前 <input type="number" id="prepMinutes" min="1" max="30" value="5" class="num-input"> 分钟高频检查</span>
+      </div>
+    </section>
+
+    <!-- 日志 -->
+    <section class="section log-section">
+      <div class="section-label-row">
+        <span class="section-label">日志</span>
+        <button class="btn-clear" id="clearLog">清空</button>
+      </div>
+      <div class="log-list" id="logList">
+        <div class="log-empty">暂无日志</div>
+      </div>
+    </section>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
