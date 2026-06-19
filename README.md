@@ -24,6 +24,10 @@
 - 支持 Chrome 桌面通知和声音提示
 - Popup 弹窗展示当前状态、目标套餐、配置项和实时日志
 
+## 宣传视频
+
+项目配套 Remotion 宣传视频位于本地 `work/glm-grabber-video`，可用于产品介绍、演示录屏和推广素材二次剪辑。
+
 ## 配合 EasyBR / eBrower 指纹浏览器多开
 
 本扩展可以作为 EasyBR / eBrower 指纹浏览器里的 Chrome 扩展使用。
