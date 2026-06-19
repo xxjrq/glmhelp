@@ -11,6 +11,10 @@
 
 > 适用场景：GLM Coding 套餐经常短时间补货、售罄，用户希望减少手动刷新和错过补货窗口的情况。
 
+## 界面预览
+
+![GLM 抢购助手弹窗截图](docs/images/popup-screenshot.png)
+
 ## 功能特性
 
 - 支持监听 Lite / Pro / Max 目标套餐
