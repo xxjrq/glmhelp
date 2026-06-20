@@ -8,6 +8,8 @@ test/node_modules/
 # Build outputs
 dist/
 dist.crx
+glmhelp/
+glmhelp.zip
 *.crx
 
 # Chrome extension private keys
