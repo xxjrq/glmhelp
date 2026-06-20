@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SRC = path.join(__dirname, 'src');
-const DIST = path.join(__dirname, 'dist');
+const DIST = path.join(__dirname, 'glmhelp');
 const ROOT = __dirname;
 
 // 需要打包的文件对: [入口文件, 输出文件]
@@ -68,7 +68,7 @@ function bundle(entryFile) {
   return code;
 }
 
-// 清理并重建 dist
+// 清理并重建 glmhelp 输出目录
 if (fs.existsSync(DIST)) {
   fs.rmSync(DIST, { recursive: true });
 }
@@ -86,7 +86,7 @@ const STATIC_COPIES = [
 for (const { src, dest } of STATIC_COPIES) {
   if (fs.existsSync(src)) {
     fs.copyFileSync(src, path.join(DIST, dest));
-    console.log(`  📄 ${path.basename(src)} → dist/${dest}`);
+    console.log(`  📄 ${path.basename(src)} → glmhelp/${dest}`);
   }
 }
 
@@ -99,7 +99,7 @@ for (const { entry, out } of BUNDLES) {
   }
   const bundled = bundle(entryPath);
   fs.writeFileSync(path.join(DIST, out), bundled, 'utf-8');
-  console.log(`  📦 ${entry} → dist/${out} (${bundled.length} bytes)`);
+  console.log(`  📦 ${entry} → glmhelp/${out} (${bundled.length} bytes)`);
 }
 
 // 复制 icons
@@ -110,7 +110,7 @@ if (fs.existsSync(ICONS_DIR)) {
   for (const f of fs.readdirSync(ICONS_DIR)) {
     fs.copyFileSync(path.join(ICONS_DIR, f), path.join(iconsDist, f));
   }
-  console.log('  🖼 icons/ → dist/icons/');
+  console.log('  🖼 icons/ → glmhelp/icons/');
 }
 
 console.log('\n✅ 打包完成');

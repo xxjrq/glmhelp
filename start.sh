@@ -5,7 +5,7 @@
 set -e
 
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-EXT_DIR="${PROJECT_DIR}/dist"
+EXT_DIR="${PROJECT_DIR}/glmhelp"
 PROFILE_DIR="${HOME}/glm-snipe-browser"
 CHROME="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 LOCK_FILE="${PROFILE_DIR}/SingletonLock"
