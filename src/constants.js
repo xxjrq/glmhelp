@@ -5,8 +5,8 @@ export const STORAGE_KEYS = {
 };
 
 export const DEFAULT_CONFIG = {
-  enabled: false,
-  targets: { lite: false, pro: false, max: true },
+  enabled: true,
+  targets: { lite: false, pro: true, max: false },
   autoClick: true,
   stopAtPayment: true,
   notify: true,

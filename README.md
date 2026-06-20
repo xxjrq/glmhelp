@@ -1,4 +1,4 @@
-# GLM 套餐抢购助手
+# GLM5.2 套餐抢购助手 bigmodel 免费助手 
 
 一个用于监听 `bigmodel.cn` GLM Coding 套餐补货状态的 Chrome 扩展。扩展可以在目标套餐按钮变为可购买时提醒用户，并按配置触发点击流程。
 
