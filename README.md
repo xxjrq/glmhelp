@@ -1,8 +1,8 @@
-# GLM5.2 套餐抢购助手 bigmodel 免费助手 
+# 智谱 GLM5.2 Coding Plan 自动抢购助手 Chrome 扩展
 
-一个用于监听 `bigmodel.cn` GLM Coding 套餐补货状态的 Chrome 扩展。扩展可以在目标套餐按钮变为可购买时提醒用户，并按配置触发点击流程。
+智谱 GLM5.2 Coding Plan 自动抢购助手是一款用于监听 `bigmodel.cn` GLM Coding 套餐补货状态的 Chrome 扩展。它支持 Lite / Pro / Max 套餐多选监控，在目标套餐从「暂时售罄」变为可购买状态时自动提醒，并可按配置触发辅助点击流程。
 
-> 核心定位：可配合 **EasyBR / eBrower 指纹浏览器** 使用，实现多浏览器实例、多账号环境隔离、多窗口同时监控 GLM Coding 套餐补货状态，适合需要同时盯多个套餐、多个账号或多个浏览器环境的场景。
+> 核心定位：面向智谱 BigModel / GLM Coding Plan 套餐补货场景，可配合 **EasyBR / eBrower 指纹浏览器** 使用，实现多浏览器实例、多账号环境隔离、多窗口同时监控 GLM5.2 Coding Plan 套餐状态，适合需要同时盯多个套餐、多个账号或多个浏览器环境的场景。
 >
 > EasyBR / eBrower 相关链接：
 >
@@ -49,9 +49,9 @@
 
 推荐流程：
 
-1. 在本项目中执行 `npm run build` 生成 `dist/`。
+1. 在本项目中执行 `npm run build` 生成 `glmhelp/`。
 2. 在 EasyBR 中创建一个或多个浏览器环境。
-3. 在每个浏览器环境的扩展管理页面加载本项目的 `dist/` 目录。
+3. 在每个浏览器环境的扩展管理页面加载本项目的 `glmhelp/` 目录。
 4. 分别登录不同 BigModel 账号，打开 `https://bigmodel.cn/glm-coding?plantype=personal`。
 5. 在每个环境的扩展 Popup 中选择要监控的目标套餐。
 6. 保持窗口运行，即可实现多浏览器、多账号、多套餐同时监控。
@@ -63,7 +63,7 @@
 本项目公开仓库只包含源码和静态资源，不包含：
 
 - Chrome 扩展打包私钥 `*.pem`
-- 已打包的 `dist/` 目录
+- 已打包的 `glmhelp/` 目录
 - `.crx` 安装包
 - 浏览器登录态或本地 profile
 
@@ -74,7 +74,7 @@
 ```text
 .
 ├── manifest.json           # Chrome MV3 manifest
-├── build.js                # 简易打包脚本，生成 dist/
+├── build.js                # 简易打包脚本，生成 glmhelp/
 ├── src/
 │   ├── background.js       # service worker，状态/日志/通知
 │   ├── content.js          # 页面扫描、DOM 监听、点击流程
@@ -118,7 +118,7 @@ npm run build
 构建后会生成：
 
 ```text
-dist/
+glmhelp/
 ├── manifest.json
 ├── background.js
 ├── content.js
@@ -148,7 +148,7 @@ dist/
 
 3. 打开右上角「开发者模式」
 4. 点击「加载已解压的扩展程序」
-5. 选择本项目生成的 `dist/` 目录
+5. 选择本项目生成的 `glmhelp/` 目录
 
 ### 方式二：macOS 启动脚本
 
