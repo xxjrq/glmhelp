@@ -10,6 +10,61 @@ const STATE = {
   paused: false
 };
 
+const HIGHLIGHT_STYLE_ID = 'glm-snipe-highlight-style';
+const HIGHLIGHT_CLASS = 'glm-snipe-watching';
+
+function injectHighlightStyle() {
+  if (document.getElementById(HIGHLIGHT_STYLE_ID)) return;
+  const style = document.createElement('style');
+  style.id = HIGHLIGHT_STYLE_ID;
+  style.textContent = `
+    .${HIGHLIGHT_CLASS} {
+      position: relative !important;
+      border-radius: 14px !important;
+      box-shadow: 0 0 0 2.5px #6366F1, 0 8px 28px rgba(99, 102, 241, 0.28) !important;
+      transition: box-shadow 0.3s ease !important;
+      animation: glmSnipePulse 2.4s ease-in-out infinite !important;
+    }
+    .${HIGHLIGHT_CLASS}::after {
+      content: '⚡ 监控中';
+      position: absolute;
+      top: -11px;
+      left: 14px;
+      z-index: 50;
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.3px;
+      color: #fff;
+      background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #EC4899 100%);
+      border-radius: 999px;
+      box-shadow: 0 3px 10px rgba(99, 102, 241, 0.4);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    @keyframes glmSnipePulse {
+      0%, 100% { box-shadow: 0 0 0 2.5px #6366F1, 0 8px 28px rgba(99, 102, 241, 0.28); }
+      50% { box-shadow: 0 0 0 2.5px #8B5CF6, 0 8px 34px rgba(139, 92, 246, 0.42); }
+    }
+  `;
+  (document.head || document.documentElement).appendChild(style);
+}
+
+function updateCardHighlights() {
+  injectHighlightStyle();
+  for (const [planKey, idx] of Object.entries(PLAN_INDEX)) {
+    const cardEl = document.querySelector(SELECTORS.CARD(idx));
+    if (!cardEl) continue;
+    const watching = STATE.config.enabled && STATE.config.targets?.[planKey] === true;
+    if (watching) {
+      cardEl.classList.add(HIGHLIGHT_CLASS);
+    } else {
+      cardEl.classList.remove(HIGHLIGHT_CLASS);
+    }
+  }
+}
+
 function classifyButton(btn) {
   if (!btn) return { status: 'unknown', text: '' };
   const text = (btn.textContent || '').trim();
@@ -165,6 +220,7 @@ const debouncedScan = debounce(() => {
   for (const card of cards.values()) {
     processCard(card);
   }
+  updateCardHighlights();
 }, 150);
 
 function startObserver() {
@@ -274,8 +330,7 @@ async function init() {
   startHeartbeat();
   injectFetchHook();
 
-  // 立即扫描一次
-  setTimeout(() => debouncedScan(), 500);
+  setTimeout(() => { debouncedScan(); updateCardHighlights(); }, 500);
 
   console.log('[GLM Snipe Content] initialized', STATE.config);
 }
@@ -285,6 +340,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message?.type) {
     case MSG.UPDATE_CONFIG:
       STATE.config = message.config;
+      updateCardHighlights();
       sendResponse({ ok: true });
       break;
     case MSG.TRIGGER_SCAN:
