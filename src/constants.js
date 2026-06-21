@@ -126,3 +126,22 @@ export const PURCHASE_RESULT = {
   SUCCESS: ['支付成功', '购买成功', '开通成功', '订阅成功', '订单成功', '感谢购买'],
   FAILURE: ['支付失败', '购买失败', '已售罄', '库存不足', '抢购人数过多', '余额不足', '订单失败', '抢购失败', '名额已满']
 };
+
+// ============================================================
+// 团队套餐详情页（team-coding-detail）选择器
+// ============================================================
+export const TEAM_DETAIL_SELECTORS = {
+  CONTAINER: '.enterprise-coding-detail-content',
+  PLAN_TYPE_ITEM: '.select-item-list .select-item',
+  PLAN_TYPE_TITLE: '.select-item-title',
+  SERVICE_TYPE_ITEM: '.service-type-item',
+  SEAT_INPUT: '.number-input-box input[type="number"]',
+  PAY_BTN: '.pay-btn, button.el-button--primary',
+  FORM_AGREEMENT: 'input[type="checkbox"]'
+};
+
+export const TEAM_DETAIL_PAGE_RE = /team-coding-detail/;
+
+export const TEAM_DETAIL_BALANCE_TEXTS = [
+  '使用余额', '余额抵扣', '余额支付'
+];

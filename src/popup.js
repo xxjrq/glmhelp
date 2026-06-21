@@ -198,4 +198,5 @@ $('#clearLog').addEventListener('click', async () => {
 setInterval(fetchState, 2000);
 
 // 初始加载
+$('#versionText').textContent = 'v' + chrome.runtime.getManifest().version;
 fetchState();
