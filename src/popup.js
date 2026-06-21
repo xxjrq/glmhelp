@@ -89,7 +89,7 @@ function escapeHtml(s) {
 
 function renderAll() {
   renderStatus();
-  for (const key of Object.keys(PLAN_INDEX)) {
+  for (const key of Object.keys(DEFAULT_CONFIG.targets)) {
     renderPlanStatus(key, currentState.state.plans?.[key]);
   }
   renderLog();

@@ -1,4 +1,4 @@
-import { STORAGE_KEYS, DEFAULT_CONFIG, MSG, PLAN_INDEX, PLAN_NAMES, SELECTORS, BUTTON_STATUS, RESTOCK_RE, RATE_LIMIT_TEXT, API, VERIFY_SELECTORS, VERIFY_TEXT_KEYWORDS, CONFIRM_TEXTS, AGREEMENT_HINT, PURCHASE_RESULT } from './constants.js';
+import { STORAGE_KEYS, DEFAULT_CONFIG, MSG, PLAN_INDEX, PLAN_NAMES, TEAM_PLAN_MATCHERS, SELECTORS, BUTTON_STATUS, RESTOCK_RE, RATE_LIMIT_TEXT, API, VERIFY_SELECTORS, VERIFY_TEXT_KEYWORDS, CONFIRM_TEXTS, CONFIRM_NEGATIVE, AGREEMENT_HINT, BALANCE_PAY_TEXTS, FINAL_PAY_TEXTS, PURCHASE_RESULT } from './constants.js';
 import { randomDelay, debounce } from './utils.js';
 
 const STATE = {
@@ -59,11 +59,14 @@ function updateCardHighlights() {
     const cardEl = document.querySelector(SELECTORS.CARD(idx));
     if (!cardEl) continue;
     const watching = STATE.config.enabled && STATE.config.targets?.[planKey] === true;
-    if (watching) {
-      cardEl.classList.add(HIGHLIGHT_CLASS);
-    } else {
-      cardEl.classList.remove(HIGHLIGHT_CLASS);
-    }
+    cardEl.classList.toggle(HIGHLIGHT_CLASS, watching);
+  }
+  const teamCards = document.querySelectorAll(SELECTORS.TEAM_CARD);
+  for (const card of teamCards) {
+    const planKey = teamPlanKeyOf(card);
+    if (!planKey) continue;
+    const watching = STATE.config.enabled && STATE.config.targets?.[planKey] === true;
+    card.classList.toggle(HIGHLIGHT_CLASS, watching);
   }
 }
 
@@ -94,6 +97,32 @@ function extractRestock(text) {
   return null;
 }
 
+function teamPlanKeyOf(card) {
+  const titleEl = card.querySelector('.package-card-title, [class*="title"], h2, h3');
+  const title = (titleEl?.textContent || '').trim();
+  if (title.includes('高级版')) return 'team_premium';
+  if (title.includes('标准版')) return 'team_standard';
+  const text = card.textContent || '';
+  if (text.includes('高级版')) return 'team_premium';
+  if (text.includes('标准版')) return 'team_standard';
+  return null;
+}
+
+function scanTeamCards(found) {
+  const cards = document.querySelectorAll(SELECTORS.TEAM_CARD);
+  if (!cards.length) return false;
+  for (const card of cards) {
+    const planKey = teamPlanKeyOf(card);
+    if (!planKey) continue;
+    const btn = card.querySelector(SELECTORS.TEAM_BUY_BTN) || card.querySelector('button');
+    if (!btn) continue;
+    const cls = classifyButton(btn);
+    if (cls.status === 'unknown') continue;
+    found.set(planKey, { planKey, cardEl: card, buttonEl: btn, status: cls.status, buttonText: cls.text, restockText: extractRestock(btn.textContent || '') });
+  }
+  return true;
+}
+
 function scanCards() {
   const found = new Map();
   let anyButton = false;
@@ -107,7 +136,8 @@ function scanCards() {
     const restockText = extractRestock(btn.textContent || '');
     found.set(planKey, { planKey, cardEl, buttonEl: btn, status: cls.status, buttonText: cls.text, restockText });
   }
-  if (!anyButton && !document.querySelector(SELECTORS.PACKAGE_LIST)) {
+  const hasTeam = scanTeamCards(found);
+  if (!anyButton && !hasTeam && !document.querySelector(SELECTORS.PACKAGE_LIST) && !document.querySelector(SELECTORS.TEAM_PACKAGE_LIST)) {
     chrome.runtime.sendMessage({
       type: MSG.PLAN_STATE_CHANGED,
       planKey: '_page_state',
@@ -182,21 +212,70 @@ async function handleConfirmDialog() {
   const modals = document.querySelectorAll('[class*="dialog"], [class*="modal"], [role="dialog"]');
   for (const m of modals) {
     if (!isVisible(m)) continue;
-    const checkboxes = m.querySelectorAll('input[type="checkbox"]:not(:checked)');
+    if (VERIFY_TEXT_KEYWORDS.some(k => (m.textContent || '').includes(k))) continue;
+    const checkboxes = m.querySelectorAll('input[type="checkbox"]:not(:checked), .el-checkbox__input:not(.is-checked)');
     for (const cb of checkboxes) {
       const around = (cb.closest('label')?.textContent || cb.parentElement?.textContent || '');
       if (AGREEMENT_HINT.some(h => around.includes(h)) || checkboxes.length === 1) {
-        cb.click();
+        await clickReal(cb);
         await randomDelay(120, 260);
       }
     }
-    const buttons = m.querySelectorAll('button, [role="button"], a');
+    const buttons = m.querySelectorAll('button, [role="button"], a, .el-button');
     for (const b of buttons) {
       const t = (b.textContent || '').trim();
+      if (t.includes('协议') || t.includes('条款')) continue;
+      if (CONFIRM_NEGATIVE.some(n => t.includes(n))) continue;
       if (CONFIRM_TEXTS.some(c => t === c || t.includes(c)) && isVisible(b) && !b.disabled) {
         await clickReal(b);
         return true;
       }
+    }
+  }
+  return false;
+}
+
+async function selectBalancePayment() {
+  const modals = document.querySelectorAll('.pay-dialog, [class*="dialog"], [class*="modal"], [role="dialog"]');
+  for (const m of modals) {
+    if (!isVisible(m)) continue;
+    const options = m.querySelectorAll('label, [class*="payment"], [class*="pay-method"], [class*="pay-item"], .el-radio, [role="radio"], li, div');
+    for (const opt of options) {
+      const t = (opt.textContent || '').trim();
+      if (t.length > 30) continue;
+      if (BALANCE_PAY_TEXTS.some(b => t.includes(b))) {
+        const r = opt.getBoundingClientRect();
+        if (r.width < 20 || r.height < 10) continue;
+        const radio = opt.querySelector('input[type="radio"], .el-radio__input') || opt;
+        await clickReal(radio);
+        await randomDelay(150, 300);
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+async function handlePayDialog() {
+  const payDialog = document.querySelector('.pay-dialog');
+  if (!payDialog || !isVisible(payDialog)) return false;
+
+  await selectBalancePayment();
+
+  const checkboxes = payDialog.querySelectorAll('input[type="checkbox"]:not(:checked), .el-checkbox__input:not(.is-checked)');
+  for (const cb of checkboxes) {
+    await clickReal(cb);
+    await randomDelay(120, 240);
+  }
+
+  const buttons = payDialog.querySelectorAll('button, [role="button"], .el-button');
+  for (const b of buttons) {
+    const t = (b.textContent || '').trim();
+    if (t.includes('协议') || t.includes('条款')) continue;
+    if (CONFIRM_NEGATIVE.some(n => t.includes(n))) continue;
+    if (FINAL_PAY_TEXTS.some(c => t === c || t.includes(c)) && isVisible(b) && !b.disabled) {
+      await clickReal(b);
+      return true;
     }
   }
   return false;

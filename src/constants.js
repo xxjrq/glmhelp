@@ -6,7 +6,7 @@ export const STORAGE_KEYS = {
 
 export const DEFAULT_CONFIG = {
   enabled: true,
-  targets: { lite: false, pro: true, max: false },
+  targets: { lite: false, pro: true, max: false, team_standard: false, team_premium: false },
   autoClick: true,
   stopAtPayment: true,
   notify: true,
@@ -23,13 +23,23 @@ export const PLAN_INDEX = { lite: 1, pro: 2, max: 3 };
 export const PLAN_NAMES = {
   lite: 'GLM Coding Lite',
   pro: 'GLM Coding Pro',
-  max: 'GLM Coding Max'
+  max: 'GLM Coding Max',
+  team_standard: 'GLM Coding 团队标准版',
+  team_premium: 'GLM Coding 团队高级版'
+};
+
+export const TEAM_PLAN_MATCHERS = {
+  team_standard: '标准版',
+  team_premium: '高级版'
 };
 
 export const SELECTORS = {
   PACKAGE_LIST: '.glm-coding-package-list',
   CARD: (n) => `.glm-coding-package-list > div:nth-child(${n})`,
   BUTTON: (n) => `.glm-coding-package-list > div:nth-child(${n}) > div > .package-card-btn-box > button`,
+  TEAM_PACKAGE_LIST: '.package-list.enterprise-package-list',
+  TEAM_CARD: '.package-card',
+  TEAM_BUY_BTN: '.buy-btn',
   TAB_BOX: '#switchTabBox',
   TAB: (n) => `#switchTabBox .switch-tab-item:nth-child(${n})`,
   DIALOG_WRAPPER: '.el-dialog__wrapper',
@@ -98,11 +108,21 @@ export const VERIFY_TEXT_KEYWORDS = [
   '请拖动', '按住滑块', '向右滑动'
 ];
 
-export const CONFIRM_TEXTS = ['确认支付', '同意并继续', '确认购买', '立即支付', '确认', '同意'];
+export const CONFIRM_TEXTS = ['确认支付', '同意并继续', '确认购买', '确认订阅', '已知悉，继续订阅', '继续订阅', '立即支付', '去支付', '提交订单', '下一步', '继续', '确认', '确定', '同意'];
+
+export const CONFIRM_NEGATIVE = ['取消', '放弃', '返回', '关闭', '退出', '拒绝', '不同意', '稍后', '暂不'];
 
 export const AGREEMENT_HINT = ['同意', '协议', '已阅读'];
 
+export const BALANCE_PAY_TEXTS = ['账户余额', '余额支付', '余额付款', '账户支付', '余额'];
+
+export const FINAL_PAY_TEXTS = ['确认支付', '立即支付', '确认付款', '去支付'];
+
+export const PAY_DIALOG_SELECTORS = ['.pay-dialog', '.el-dialog__wrapper', '.el-dialog', '[role="dialog"]', '[class*="dialog"]', '[class*="modal"]'];
+
+export const PAY_SUCCESS_SELECTORS = ['.pay-success-dialog-box'];
+
 export const PURCHASE_RESULT = {
-  SUCCESS: ['支付成功', '购买成功', '开通成功', '订阅成功'],
-  FAILURE: ['支付失败', '购买失败', '已售罄', '库存不足', '抢购人数过多']
+  SUCCESS: ['支付成功', '购买成功', '开通成功', '订阅成功', '订单成功', '感谢购买'],
+  FAILURE: ['支付失败', '购买失败', '已售罄', '库存不足', '抢购人数过多', '余额不足', '订单失败', '抢购失败', '名额已满']
 };

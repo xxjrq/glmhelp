@@ -273,6 +273,10 @@ body {
   gap: 8px;
 }
 
+.plan-grid-2 {
+  grid-template-columns: 1fr 1fr;
+}
+
 .plan-card {
   position: relative;
   display: flex;

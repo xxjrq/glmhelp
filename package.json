@@ -1,6 +1,6 @@
 {
   "name": "glm-snipe-extension",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "GLM Coding 套餐补货监听与提醒 Chrome 扩展",
   "private": false,
   "type": "commonjs",
