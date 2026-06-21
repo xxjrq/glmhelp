@@ -144,7 +144,12 @@ function detectSecurityPopup() {
   for (const sel of VERIFY_SELECTORS) {
     const els = document.querySelectorAll(sel);
     for (const el of els) {
-      if (isVisible(el)) return true;
+      const r = el.getBoundingClientRect();
+      if (r.width < 120 || r.height < 80) continue;
+      const txt = el.textContent || '';
+      if (VERIFY_TEXT_KEYWORDS.some(k => txt.includes(k)) && getComputedStyle(el).display !== 'none') {
+        return true;
+      }
     }
   }
   const modals = document.querySelectorAll('[class*="dialog"], [class*="modal"], [role="dialog"]');
@@ -314,13 +319,13 @@ async function triggerPurchase(card) {
 // ============================================================
 
 function scanNow() {
+  updateCardHighlights();
   if (STATE.paused) return;
   if (checkSecurityGate()) return;
   const cards = scanCards();
   for (const card of cards.values()) {
     processCard(card);
   }
-  updateCardHighlights();
 }
 
 const debouncedScan = debounce(scanNow, 150);
@@ -379,7 +384,7 @@ function stopHeartbeat() {
 async function pollInventoryAPI() {
   if (STATE.paused || STATE.verifyPaused) return;
   try {
-    const resp = await fetch(API.PREVIEW, {
+    const resp = await fetch(API.PRODUCT_INFO, {
       method: 'GET',
       credentials: 'include',
       headers: { 'X-Requested-With': 'XMLHttpRequest' }
