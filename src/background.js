@@ -121,6 +121,22 @@ async function broadcastToContent(message) {
   }
 }
 
+const GLM_URL = 'https://bigmodel.cn/glm-coding?plantype=personal';
+
+async function ensureBigmodelTab() {
+  try {
+    const tabs = await chrome.tabs.query({ url: 'https://bigmodel.cn/glm-coding*' });
+    if (tabs.length > 0) {
+      await chrome.tabs.update(tabs[0].id, { active: true });
+      return;
+    }
+    await chrome.tabs.create({ url: GLM_URL, active: true });
+    await pushLog({ level: 'info', msg: '已打开 GLM Coding 套餐页' });
+  } catch (e) {
+    console.warn('ensureBigmodelTab error', e);
+  }
+}
+
 // ============================================================
 // 通知与声音
 // ============================================================
@@ -189,10 +205,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           if (cfg.enabled) {
             await setupAlarms();
             await pushLog({ level: 'info', msg: '✅ 抢购已启动' });
+            await ensureBigmodelTab();
           } else {
             await cancelAlarms();
             await pushLog({ level: 'info', msg: '⏸ 抢购已暂停' });
           }
+          await broadcastToContent({ type: MSG.UPDATE_CONFIG, config: cfg });
           sendResponse({ ok: true, config: cfg });
           break;
         }
