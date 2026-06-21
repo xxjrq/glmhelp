@@ -24,6 +24,18 @@
         "https://*.bigmodel.cn/glm-coding*"
       ],
       "js": [
+        "inject.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_start",
+      "all_frames": false
+    },
+    {
+      "matches": [
+        "https://bigmodel.cn/glm-coding*",
+        "https://*.bigmodel.cn/glm-coding*"
+      ],
+      "js": [
         "content.js"
       ],
       "run_at": "document_idle",

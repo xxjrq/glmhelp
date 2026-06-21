@@ -4,13 +4,15 @@
 (function() {
   const origFetch = window.fetch;
 
+  function isWatched(url) {
+    return /\/api\/biz\/pay\/(preview|check)/.test(url) ||
+      /product|inventory|stock|sku|goods/i.test(url);
+  }
+
   window.fetch = async function(...args) {
     const url = typeof args[0] === 'string' ? args[0] : args[0]?.url || '';
-
     const res = await origFetch.apply(this, args);
-
-    // 只拦截库存相关 API
-    if (url.includes('/api/biz/pay/preview') || url.includes('/api/biz/pay/check')) {
+    if (isWatched(url)) {
       const clone = res.clone();
       try {
         const body = await clone.text();
@@ -18,15 +20,13 @@
           source: 'glm-snipe-inject',
           kind: 'inventory_response',
           url: url.slice(0, 200),
-          payload: body.slice(0, 2000)
+          payload: body.slice(0, 4000)
         }, '*');
       } catch (e) {}
     }
-
     return res;
   };
 
-  // 也 hook XHR
   const origOpen = XMLHttpRequest.prototype.open;
   const origSend = XMLHttpRequest.prototype.send;
 
@@ -37,17 +37,17 @@
 
   XMLHttpRequest.prototype.send = function(...args) {
     this.addEventListener('load', function() {
-      if (this._glmUrl && (this._glmUrl.includes('/api/biz/pay/preview') || this._glmUrl.includes('/api/biz/pay/check'))) {
+      if (this._glmUrl && isWatched(this._glmUrl)) {
         window.postMessage({
           source: 'glm-snipe-inject',
           kind: 'inventory_response',
           url: this._glmUrl,
-          payload: (this.responseText || '').slice(0, 2000)
+          payload: (this.responseText || '').slice(0, 4000)
         }, '*');
       }
     });
     return origSend.apply(this, args);
   };
 
-  console.log('[GLM Snipe Inject] fetch/XHR hook installed');
+  console.log('[GLM Snipe Inject] fetch/XHR hook installed at document_start (MAIN world)');
 })();
