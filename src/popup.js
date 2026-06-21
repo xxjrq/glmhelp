@@ -26,7 +26,7 @@ function renderStatus() {
     return;
   }
 
-  if (st.lastPurchaseTriggered) {
+  if (st.lastPurchaseTriggered && (Date.now() - st.lastPurchaseTriggered.ts) < 5 * 60 * 1000) {
     dot.className = 'status-dot triggered';
     text.textContent = '🎉 已触发购买!';
     return;

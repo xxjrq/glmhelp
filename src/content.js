@@ -457,6 +457,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message?.type) {
     case MSG.UPDATE_CONFIG:
       STATE.config = message.config;
+      if (STATE.config.enabled) {
+        STATE.triggeredKeys.clear();
+        STATE.cards.clear();
+      }
       scanNow();
       sendResponse({ ok: true });
       break;

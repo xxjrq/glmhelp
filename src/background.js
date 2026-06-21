@@ -203,6 +203,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
           cfg.enabled = !!message.enabled;
           await setConfig(cfg);
           if (cfg.enabled) {
+            const st = await getState();
+            st.lastPurchaseTriggered = null;
+            st.plans = {};
+            st.verifying = false;
+            await setState(st);
             await setupAlarms();
             await pushLog({ level: 'info', msg: '✅ 抢购已启动' });
             await ensureBigmodelTab();
@@ -233,10 +238,23 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         }
 
         case MSG.PLAN_STATE_CHANGED: {
-          // content 报告某套餐状态变化
           const { planKey, status, restockText, buttonText } = message;
           const state = await getState();
           state.plans = state.plans || {};
+
+          if (planKey === '_verify') {
+            state.verifying = status === 'verifying';
+            await setState(state);
+            await pushLog({ level: 'info', msg: buttonText || ('安全验证: ' + status) });
+            sendResponse({ ok: true });
+            break;
+          }
+          if (planKey === '_page_state') {
+            await setState(state);
+            sendResponse({ ok: true });
+            break;
+          }
+
           const prev = state.plans[planKey] || {};
           const restockAt = restockText ? parseChineseDate(restockText)?.getTime() : null;
           state.plans[planKey] = {
@@ -247,10 +265,12 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             lastSeen: Date.now()
           };
           await setState(state);
-          await pushLog({
-            level: 'info',
-            msg: `[${planKey}] 状态: ${status} / ${buttonText}${restockText ? ' / 补货:' + restockText : ''}`
-          });
+          if (prev.status !== status) {
+            await pushLog({
+              level: 'info',
+              msg: `[${planKey}] 状态: ${status} / ${buttonText}${restockText ? ' / 补货:' + restockText : ''}`
+            });
+          }
           await evaluateRefillPrep();
           sendResponse({ ok: true });
           break;
