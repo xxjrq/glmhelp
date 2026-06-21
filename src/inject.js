@@ -5,8 +5,8 @@
   const origFetch = window.fetch;
 
   function isWatched(url) {
-    return /\/api\/biz\/pay\/(preview|check)/.test(url) ||
-      /product|inventory|stock|sku|goods/i.test(url);
+    return /\/api\/biz\/(tokenResPack\/productIdInfo|customer\/getTokenMagnitude|pay\/(preview|check))/.test(url) ||
+      /inventory|stock|sku/i.test(url);
   }
 
   window.fetch = async function(...args) {

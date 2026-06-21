@@ -65,9 +65,13 @@ export const ALARMS = {
 };
 
 export const API = {
+  PRODUCT_INFO: '/api/biz/tokenResPack/productIdInfo',
+  TOKEN_MAGNITUDE: '/api/biz/customer/getTokenMagnitude',
   PREVIEW: '/api/biz/pay/preview',
   CHECK: '/api/biz/pay/check'
 };
+
+export const WATCHED_API_RE = /\/api\/biz\/(tokenResPack\/productIdInfo|customer\/getTokenMagnitude|pay\/(preview|check))/;
 
 export const PRODUCTS = {
   'lite-month': { id: 'product-02434c', price: 49 },
