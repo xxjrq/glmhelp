@@ -313,7 +313,7 @@ async function triggerPurchase(card) {
 // 第一层：MutationObserver
 // ============================================================
 
-const debouncedScan = debounce(() => {
+function scanNow() {
   if (STATE.paused) return;
   if (checkSecurityGate()) return;
   const cards = scanCards();
@@ -321,7 +321,9 @@ const debouncedScan = debounce(() => {
     processCard(card);
   }
   updateCardHighlights();
-}, 150);
+}
+
+const debouncedScan = debounce(scanNow, 150);
 
 function startObserver() {
   if (STATE.observer) return;
@@ -455,7 +457,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message?.type) {
     case MSG.UPDATE_CONFIG:
       STATE.config = message.config;
-      updateCardHighlights();
+      scanNow();
       sendResponse({ ok: true });
       break;
     case MSG.TRIGGER_SCAN:
