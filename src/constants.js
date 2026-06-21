@@ -68,3 +68,37 @@ export const API = {
   PREVIEW: '/api/biz/pay/preview',
   CHECK: '/api/biz/pay/check'
 };
+
+export const PRODUCTS = {
+  'lite-month': { id: 'product-02434c', price: 49 },
+  'pro-month': { id: 'product-1df3e1', price: 149 },
+  'max-month': { id: 'product-2fc421', price: 469 },
+  'lite-quarter': { id: 'product-b8ea38', price: 132.3 },
+  'pro-quarter': { id: 'product-fef82f', price: 402.3 },
+  'max-quarter': { id: 'product-5d3a03', price: 1266.3 },
+  'lite-year': { id: 'product-70a804', price: 470.4 },
+  'pro-year': { id: 'product-5643e6', price: 1430.4 },
+  'max-year': { id: 'product-d46f8b', price: 4502.4 }
+};
+
+export const VERIFY_SELECTORS = [
+  '[class*="verify"]', '[class*="captcha"]', '[class*="geetest"]',
+  '[class*="tcaptcha"]', '[class*="yidun"]',
+  '[id*="verify"]', '[id*="captcha"]', '[id*="geetest"]',
+  '.geetest_panel', '.yidun_panel'
+];
+
+export const VERIFY_TEXT_KEYWORDS = [
+  '安全验证', '安全检测', '请完成验证', '滑动验证', '拖动滑块',
+  '图形验证', '人机验证', '点击验证', '请验证', '验证码',
+  '请拖动', '按住滑块', '向右滑动'
+];
+
+export const CONFIRM_TEXTS = ['确认支付', '同意并继续', '确认购买', '立即支付', '确认', '同意'];
+
+export const AGREEMENT_HINT = ['同意', '协议', '已阅读'];
+
+export const PURCHASE_RESULT = {
+  SUCCESS: ['支付成功', '购买成功', '开通成功', '订阅成功'],
+  FAILURE: ['支付失败', '购买失败', '已售罄', '库存不足', '抢购人数过多']
+};
