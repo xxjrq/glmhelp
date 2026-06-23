@@ -15,7 +15,7 @@
     "https://*.bigmodel.cn/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "后台服务.js"
   },
   "content_scripts": [
     {
@@ -40,7 +40,7 @@
         "https://*.bigmodel.cn/team-coding-detail*"
       ],
       "js": [
-        "content.js"
+        "页面监控.js"
       ],
       "run_at": "document_idle",
       "all_frames": false
@@ -59,7 +59,7 @@
     }
   ],
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "配置界面.html",
     "default_title": "GLM 套餐抢购助手",
     "default_icon": {
       "16": "icons/icon16.png",

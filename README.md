@@ -76,17 +76,18 @@
 ├── manifest.json           # Chrome MV3 manifest
 ├── build.js                # 简易打包脚本，生成 glmhelp/
 ├── src/
-│   ├── background.js       # service worker，状态/日志/通知
-│   ├── content.js          # 页面扫描、DOM 监听、点击流程
+│   ├── 后台服务.js          # service worker，状态/日志/通知
+│   ├── 页面监控.js          # 页面扫描、DOM 监听、点击流程
+│   ├── 配置界面.html        # 扩展弹窗
+│   ├── 配置界面样式.css     # 弹窗样式
+│   ├── 配置界面逻辑.js      # 弹窗交互逻辑
 │   ├── inject.js           # fetch/XHR hook
-│   ├── popup.html          # 扩展弹窗
-│   ├── popup.css
-│   ├── popup.js
-│   ├── constants.js
-│   ├── utils.js
+│   ├── constants.js        # 常量定义
+│   ├── utils.js            # 工具函数
 │   └── notify.wav
 ├── icons/                  # 扩展图标
 ├── test/                   # 逻辑测试和 fixture
+├── 使用说明.md             # 用户使用指南
 ├── start.sh                # macOS 下启动带扩展的 Chrome
 └── stop.sh                 # 停止专用 Chrome profile
 ```
@@ -120,12 +121,12 @@ npm run build
 ```text
 glmhelp/
 ├── manifest.json
-├── background.js
-├── content.js
+├── 后台服务.js
+├── 页面监控.js
+├── 配置界面.html
+├── 配置界面样式.css
+├── 配置界面逻辑.js
 ├── inject.js
-├── popup.html
-├── popup.css
-├── popup.js
 ├── notify.wav
 └── icons/
 ```

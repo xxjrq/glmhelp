@@ -10,9 +10,9 @@ const ROOT = __dirname;
 
 // 需要打包的文件对: [入口文件, 输出文件]
 const BUNDLES = [
-  { entry: 'background.js', out: 'background.js' },
-  { entry: 'content.js', out: 'content.js' },
-  { entry: 'popup.js', out: 'popup.js' }
+  { entry: '后台服务.js', out: '后台服务.js' },
+  { entry: '页面监控.js', out: '页面监控.js' },
+  { entry: '配置界面逻辑.js', out: '配置界面逻辑.js' }
 ];
 
 // 共享模块（被 import 的文件）
@@ -77,8 +77,8 @@ fs.mkdirSync(DIST, { recursive: true });
 // 复制静态资源
 const STATIC_COPIES = [
   { src: path.join(ROOT, 'manifest.json'), dest: 'manifest.json' },
-  { src: path.join(SRC, 'popup.html'), dest: 'popup.html' },
-  { src: path.join(SRC, 'popup.css'), dest: 'popup.css' },
+  { src: path.join(SRC, '配置界面.html'), dest: '配置界面.html' },
+  { src: path.join(SRC, '配置界面样式.css'), dest: '配置界面样式.css' },
   { src: path.join(SRC, 'inject.js'), dest: 'inject.js' },
   { src: path.join(SRC, 'notify.wav'), dest: 'notify.wav' }
 ];
