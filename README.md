@@ -4,9 +4,9 @@
 
 > 核心定位：面向智谱 BigModel / GLM Coding Plan 套餐补货场景，可配合 **EasyBR / eBrower 指纹浏览器** 使用，实现多浏览器实例、多账号环境隔离、多窗口同时监控 GLM5.2 Coding Plan 套餐状态，适合需要同时盯多个套餐、多个账号或多个浏览器环境的场景。
 >
-> EasyBR / eBrower 相关链接：
->
+> EasyBR 相关：
 > - 官网：[https://www.ebrower.com/](https://www.ebrower.com/)
+> - 浏览器使用教程：[https://www.ebrower.com/2026/helperdoc/2-easybr-liu-lan-qi-shi-yong-liu-cheng/](https://www.ebrower.com/2026/helperdoc/2-easybr-liu-lan-qi-shi-yong-liu-cheng/)
 > - API 文档：[https://www.ebrower.com/helperdoc/apidoc.html](https://www.ebrower.com/helperdoc/apidoc.html)
 
 > 适用场景：GLM Coding 套餐经常短时间补货、售罄，用户希望减少手动刷新和错过补货窗口的情况。
@@ -37,7 +37,7 @@
 本扩展可以作为 EasyBR / eBrower 指纹浏览器里的 Chrome 扩展使用。
 
 - 官网：[https://www.ebrower.com/](https://www.ebrower.com/)
-- API 文档：[https://www.ebrower.com/helperdoc/apidoc.html](https://www.ebrower.com/helperdoc/apidoc.html)
+- 浏览器使用文档：https://www.ebrower.com/2026/helperdoc/2-easybr-liu-lan-qi-shi-yong-liu-cheng/
 
 每个 EasyBR 浏览器环境拥有独立指纹、独立 Cookie、独立登录态和独立扩展配置，因此可以实现：
 
@@ -196,3 +196,4 @@ npm run stop
 ## License
 
 MIT
+

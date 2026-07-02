@@ -184,7 +184,10 @@ function detectSecurityPopup() {
       const r = el.getBoundingClientRect();
       if (r.width < 120 || r.height < 80) continue;
       const txt = el.textContent || '';
-      if (VERIFY_TEXT_KEYWORDS.some(k => txt.includes(k)) && getComputedStyle(el).display !== 'none') {
+      const matchedKeyword = VERIFY_TEXT_KEYWORDS.find(k => txt.includes(k));
+      if (matchedKeyword && getComputedStyle(el).display !== 'none') {
+        console.log('[GLM Snipe DBG] 安全验证命中 #1: selector=%s keyword=%s tag=%s class=%s text="%s" rect=%dx%d',
+          sel, matchedKeyword, el.tagName, (el.className||'').slice(0,60), txt.slice(0,80), Math.round(r.width), Math.round(r.height));
         return true;
       }
     }
@@ -193,9 +196,16 @@ function detectSecurityPopup() {
   for (const m of modals) {
     if (!isVisible(m)) continue;
     const txt = m.textContent || '';
-    if (VERIFY_TEXT_KEYWORDS.some(k => txt.includes(k))) return true;
+    const matchedKeyword = VERIFY_TEXT_KEYWORDS.find(k => txt.includes(k));
+    if (matchedKeyword) {
+      console.log('[GLM Snipe DBG] 安全验证命中 #2: keyword=%s tag=%s class=%s text="%s"',
+        matchedKeyword, m.tagName, (m.className||'').slice(0,60), txt.slice(0,80));
+      return true;
+    }
   }
-  if (document.querySelector('iframe[src*="captcha"], iframe[src*="verify"], iframe[src*="geetest"], iframe[src*="tcaptcha"]')) {
+  const iframe = document.querySelector('iframe[src*="captcha"], iframe[src*="verify"], iframe[src*="geetest"], iframe[src*="tcaptcha"]');
+  if (iframe) {
+    console.log('[GLM Snipe DBG] 安全验证命中 #3: iframe src=%s', iframe.src || iframe.getAttribute('src'));
     return true;
   }
   return false;
@@ -209,8 +219,10 @@ function checkSecurityGate() {
     chrome.runtime.sendMessage({ type: MSG.PLAN_STATE_CHANGED, planKey: '_verify', status: 'verifying', buttonText: '检测到安全验证，已暂停', restockText: null }).catch(() => {});
   } else if (!verifying && STATE.verifyPaused) {
     STATE.verifyPaused = false;
-    speak('验证已通过，恢复抢购监控');
     chrome.runtime.sendMessage({ type: MSG.PLAN_STATE_CHANGED, planKey: '_verify', status: 'verify_cleared', buttonText: '验证已通过，恢复监控', restockText: null }).catch(() => {});
+    // CAPTCHA 刚消失 → 立即扫描，防止补货窗口被错过
+    debouncedScan();
+    speak('验证已通过，恢复抢购监控');
   }
   return verifying;
 }
@@ -325,6 +337,10 @@ async function processCard(card) {
   const justBecameAvailable = card.status === 'available' && (!prev || prev.status !== 'available');
 
   if (enabled && target && autoClick && card.status === 'available' && !STATE.triggeredKeys.has(card.planKey)) {
+    if (STATE.verifyPaused) {
+      // CAPTCHA 弹窗中，暂不点击 — 待 CAPTCHA 清除后下次心跳触发
+      return;
+    }
     STATE.triggeredKeys.add(card.planKey);
     await triggerPurchase(card);
   }
@@ -423,7 +439,7 @@ function findTeamDetailBalanceOption() {
 }
 
 async function handleTeamDetailPurchase() {
-  if (STATE.teamPurchaseTriggered || STATE.paused) return;
+  if (STATE.teamPurchaseTriggered || STATE.paused || STATE.verifyPaused) return;
   const hasTeamTarget = STATE.config.targets?.team_standard || STATE.config.targets?.team_premium;
   if (!hasTeamTarget || !STATE.config.enabled || !STATE.config.autoClick) return;
 
@@ -516,8 +532,7 @@ function startTeamDetailLoop() {
   console.log('[GLM Snipe] 启动团队详情页扫描');
   STATE.heartbeatTimer = setInterval(() => {
     if (STATE.paused) return;
-    // 等待安全验证通过后再触发购买
-    if (checkSecurityGate()) return;
+    checkSecurityGate(); // 更新 CAPTCHA 状态，不阻塞心跳
     handleTeamDetailPurchase();
   }, 1200);
 }
@@ -529,10 +544,7 @@ function startTeamDetailLoop() {
 function scanNow() {
   updateCardHighlights();
   if (STATE.paused) return;
-  const verifying = checkSecurityGate();
-  // 团队套餐列表页：允许跳过安全验证继续扫描团队卡片
-  // 个人套餐页：安全验证正常阻塞
-  if (verifying && !location.href.includes('plantype=team')) return;
+  checkSecurityGate(); // 更新 verifyPaused 状态，但不阻塞扫描
   const cards = scanCards();
   for (const card of cards.values()) {
     processCard(card);
@@ -593,7 +605,7 @@ function stopHeartbeat() {
 }
 
 async function pollInventoryAPI() {
-  if (STATE.paused || STATE.verifyPaused) return;
+  if (STATE.paused) return;
   try {
     const resp = await fetch(API.PRODUCT_INFO, {
       method: 'GET',
